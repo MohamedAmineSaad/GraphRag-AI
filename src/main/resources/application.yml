@@ -1,0 +1,48 @@
+logging:
+    pattern:
+        console: "[GenAI-RAG] %clr(%d{HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:%5p}) %clr(---){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}"
+    level:
+        org:
+            springframework:
+                ai:
+                    chat:
+                        client:
+                            advisor: DEBUG
+
+spring:
+    application:
+        name: genai-rag
+    main:
+        banner-mode: off
+        log-startup-info: false
+        allow-bean-definition-overriding: true
+    neo4j:
+        uri: bolt://localhost:7687
+        authentication:
+            username: neo4j
+            password: omnedu2025    
+    ai:
+        openai:
+            api-key: ${OPENAI_API_KEY} 
+            chat:
+                options:
+                    model: gpt-4o-mini
+            embedding:
+                options:
+                    model: text-embedding-3-small
+                    encoding-format: float
+                    dimensions: 1536
+        vectorstore:
+            neo4j:
+                initialize-schema: true
+    webflux:
+        client:
+            connect-timeout: 30s
+            read-timeout: 60s
+
+# Retry configuration for OpenAI
+spring.ai.retry:
+    max-attempts: 3
+    initial-interval: 2s
+    multiplier: 2
+    max-interval: 10s
